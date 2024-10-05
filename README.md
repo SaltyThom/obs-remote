@@ -1,5 +1,7 @@
 # obs-remote
-This front application build with Vue.js 3 make a simple user interface to control OBS client with websocket
+This front application build with Vue.js 3 make a simple user interface to control OBS client with websocket.
+
+If you want to try don't forget to start OBS websocket server!
 
 ## Project Setup
 ```sh
