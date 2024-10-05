@@ -10,6 +10,7 @@ import ObsWebsocket from './websocket/ObsWebsocket'
 const app = createApp(App)
 const obsWebsocket = new ObsWebsocket()
 
+// Only for debug
 window.ObsWebsocket = obsWebsocket
 
 app.provide('ObsWebsocket', obsWebsocket)

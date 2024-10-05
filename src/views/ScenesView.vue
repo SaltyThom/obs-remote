@@ -1,23 +1,23 @@
 <script setup>
-import { inject, ref, onMounted } from 'vue'
+import { inject, computed, onMounted } from 'vue'
+import { useScenesStore } from '@/stores/scenes'
 import Card from '@/components/Card.vue'
 
-const currentSceneName = ref()
-const scenesList = ref([])
 const ObsWebsocket = inject('ObsWebsocket')
+const scenesStore = useScenesStore()
+const currentSceneName = computed(() => scenesStore.scenes.current)
+const scenesList = computed(() => scenesStore.scenes.list)
 
 onMounted(() => {
   ObsWebsocket.request('GetSceneList', (data) => {
-    currentSceneName.value = data.responseData.currentProgramSceneName
+    scenesStore.setCurrent(data.responseData.currentProgramSceneName)
     if (data.responseData.scenes) {
-      data.responseData.scenes.forEach((scene) => {
-        scenesList.value.push(scene)
-      })
+      scenesStore.setList(data.responseData.scenes)
     }
   })
 
   ObsWebsocket.addEventListener('CurrentProgramSceneChanged', (data) => {
-    currentSceneName.value = data.eventData.sceneName
+    scenesStore.setCurrent(data.eventData.sceneName)
   })
 })
 
@@ -33,8 +33,8 @@ function changeScene(sceneName) {
     <div class="flex flex-col mt-1">
       <Card
         v-for="scene in scenesList"
-        :class="{ 'bg-emerald-600 text-emerald-100': scene.sceneName === currentSceneName }"
         class="cursor-pointer"
+        :selected="scene.sceneName === currentSceneName"
         @click="changeScene(scene.sceneName)"
       >{{ scene.sceneName }}</Card>
     </div>
